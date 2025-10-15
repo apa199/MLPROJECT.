@@ -41,7 +41,46 @@ class ModelTrainer:
                     "AdaBoost Regressor": AdaBoostRegressor(),
                     "SVR":SVR(),
                     "CatBoostRegressor":CatBoostRegressor(verbose=False)}
-            model_report:dict=evaluate_model(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models)
+            
+            params = {
+                "LinearRegression": {},
+                "Ridge": {
+                    "alpha": [0.1, 1.0, 10.0],
+                    "solver": ["auto", "cholesky", "lsqr"]
+                        },
+                "Lasso": {
+                    "alpha": [0.001, 0.01, 0.1, 1.0]
+                    },
+                "KNN": {
+                    "n_neighbors": [3, 5, 7]
+                    },
+                "DT": {
+                    "criterion": ["squared_error", "friedman_mse"],
+                    "max_depth": [5, 10, None]
+                    },
+                "RF": {
+                    "n_estimators": [50, 100],
+                    "max_depth": [5, 10, None]
+                    },
+                "AdaBoost Regressor": {
+                    "n_estimators": [50, 100],
+                    "learning_rate": [0.01, 0.1, 1]
+                    },
+                "SVR": {
+                    "kernel": ["linear", "rbf"],
+                    "C": [1, 10]
+                    },
+                "CatBoostRegressor": {
+                    "depth": [6, 8],
+                    "learning_rate": [0.01, 0.1],
+                    "iterations": [100, 200]
+                    }}
+
+
+            
+
+
+            model_report:dict=evaluate_model(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models,params=params)
             best_model_score=max(sorted(model_report.values()))
             best_model_name=list(model_report.keys())[list(model_report.values()).index(best_model_score)]
             best_model=models[best_model_name]
